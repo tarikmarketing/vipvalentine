@@ -92,6 +92,9 @@ document.body.insertAdjacentHTML('beforeend', '<div class="red-overlay"></div>')
 
 document.querySelectorAll('.heart').forEach(heart => {
     heart.addEventListener('click', async function() {
+        // Hide instruction text
+        document.querySelector('.game-instruction').style.display = 'none';
+        
         // Disable hearts
         document.querySelectorAll('.heart').forEach(h => h.style.pointerEvents = 'none');
         
