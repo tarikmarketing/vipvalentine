@@ -1,0 +1,7 @@
+name = "prizerz"
+main = "src/worker.js"
+
+[[d1_databases]]
+binding = "DATABASE"
+database_name = "valentinedb"
+database_id = "d91953fc-b6f6-4e91-9a00-eec081274436"
