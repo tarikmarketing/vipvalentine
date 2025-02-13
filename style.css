@@ -26,6 +26,8 @@ body {
 }
 
 .hearts-container {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     display: flex;
     flex-direction: row;
     gap: 100px;
@@ -39,6 +41,11 @@ body {
 }
 
 .heart {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    min-width: 44px; /* Minimum touch target size */
+    min-height: 44px;
     width: 100px;
     height: 100px;
     background: none;
@@ -50,6 +57,17 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
+}
+@media (max-width: 768px) {
+    .hearts-container {
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .heart img {
+        width: 80px; /* Larger touch targets on mobile */
+        height: auto;
+    }
 }
 
 .heart img {
