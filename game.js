@@ -80,6 +80,7 @@ startGameButton.addEventListener('click', async () => {
         document.querySelector('.game-container').style.display = 'flex';
         document.querySelector('.username-warning').style.display = 'none';
         document.body.classList.add('game-started');
+        document.querySelector('.login-container').style.zIndex = "1";
 
     } catch (error) {
         showError('Bir hata oluştu, lütfen tekrar deneyin');
@@ -91,23 +92,29 @@ startGameButton.addEventListener('click', async () => {
 document.body.insertAdjacentHTML('beforeend', '<div class="red-overlay"></div>');
 
 document.querySelectorAll('.heart').forEach(heart => {
-    heart.addEventListener('click', async function() {
-        // Hide instruction text
-        document.querySelector('.game-instruction').style.display = 'none';
-        
-        // Disable hearts
-        document.querySelectorAll('.heart').forEach(h => h.style.pointerEvents = 'none');
-        
-        // Heart animation
-        this.classList.add('selected');
-        document.querySelectorAll('.heart').forEach(otherHeart => {
-            if (otherHeart !== this) {
-                otherHeart.classList.add('not-selected');
-            }
-        });
+    heart.addEventListener('click', handleHeartSelection);
+    heart.addEventListener('touchstart', function(e) {
+        e.preventDefault(); // Prevent double-firing
+        handleHeartSelection.call(this, e);
+    }, false);
+});
 
-        await new Promise(resolve => setTimeout(resolve, 400));
+function handleHeartSelection(e) {
+    // Hide instruction text
+    document.querySelector('.game-instruction').style.display = 'none';
+    
+    // Disable hearts
+    document.querySelectorAll('.heart').forEach(h => h.style.pointerEvents = 'none');
+    
+    // Heart animation
+    this.classList.add('selected');
+    document.querySelectorAll('.heart').forEach(otherHeart => {
+        if (otherHeart !== this) {
+            otherHeart.classList.add('not-selected');
+        }
+    });
 
+    new Promise(resolve => setTimeout(resolve, 400)).then(() => {
         // Play video
         const videoOverlay = document.querySelector('.video-overlay');
         const transitionVideo = document.querySelector('#transition-video');
@@ -115,7 +122,7 @@ document.querySelectorAll('.heart').forEach(heart => {
         videoOverlay.classList.add('show');
         transitionVideo.currentTime = 0;
         transitionVideo.playbackRate = 1.2; // Speed up video
-        await transitionVideo.play();
+        transitionVideo.play();
 
         // Listen for video end
         transitionVideo.onended = async () => {
@@ -123,7 +130,7 @@ document.querySelectorAll('.heart').forEach(heart => {
             await processReward();
         };
     });
-});
+}
 
 async function processReward() {
     try {
@@ -217,4 +224,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Video yüklendiğinde otomatik oynatma için hazırla
     bgVideo.load();
     bgVideo.muted = true; // Tarayıcı politikaları gereği
+});
+
+document.getElementById('mainLogo').addEventListener('click', function() {
+  const animatedLogo = document.getElementById('animatedLogo');
+  animatedLogo.classList.add('show');
+  
+  // Hide animation after it completes (adjust timeout to match GIF duration)
+  setTimeout(() => {
+    animatedLogo.classList.remove('show');
+  }, 3000); // 3 seconds
+});
+
+document.getElementById('mainLogo').addEventListener('click', function() {
+    const video = document.getElementById('logoVideo');
+    video.classList.add('active');
+    video.currentTime = 0; // Reset video to start
+    video.play();
+    
+    // Hide video when it ends
+    video.onended = function() {
+        video.classList.remove('active');
+    };
 });
